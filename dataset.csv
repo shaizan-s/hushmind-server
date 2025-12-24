@@ -1,0 +1,602 @@
+text,mood
+I feel hopeless and sad,Depression
+I don't want to get out of bed today,Depression
+Everything feels so heavy and dark,Depression
+I have lost interest in things I used to love,Depression
+I feel like crying for no reason,Depression
+I feel empty inside like nothing matters,Depression
+I feel so down and low today,Depression
+I just can't find the energy to do anything,Depression
+Why does everything feel so gray?,Depression
+I feel numb and hollow,Depression
+I am just a burden to everyone,Depression
+Nobody cares if I exist or not,Depression
+I am tired of pretending to be happy,Depression
+The sadness just won't go away,Depression
+I feel broken inside,Depression
+It feels like I am drowning in sadness,Depression
+Nothing brings me joy anymore,Depression
+I feel like a failure,Depression
+My heart hurts with sadness,Depression
+I am exhausted deeply in my soul,Depression
+I can't stop the negative thoughts,Depression
+I feel worthless,Depression
+I feel so guilty for no reason,Depression
+I feel like I am in a black hole,Depression
+It is hard to breathe with this sadness,Depression
+I cry myself to sleep every night,Depression
+I feel weak and pathetic,Depression
+I am trapped in my own mind,Depression
+The world has lost its color,Depression
+I feel like I am sinking,Depression
+I am so tired of fighting this feeling,Depression
+I want to just sleep forever,Crisis
+I hate myself and my life,Crisis
+There is no point in trying anymore,Crisis
+I don't see a future for myself,Crisis
+I just want to disappear,Crisis
+Every day is a struggle just to survive,Crisis
+I feel dead inside,Crisis
+I have no motivation to live,Crisis
+I feel like giving up,Crisis
+I want to end it all,Crisis
+I am thinking about hurting myself,Crisis
+I wish I could just go to sleep and never wake up,Crisis
+I feel like I am better off dead,Crisis
+There is no way out of this,Crisis
+My heart is beating so fast I can't breathe,Anxiety
+I am worried that something bad will happen,Anxiety
+I feel nervous and shaky all the time,Anxiety
+I can't stop overthinking everything,Anxiety
+I feel panic rising in my chest,Anxiety
+I am scared of the future,Anxiety
+My thoughts are racing and I can't focus,Anxiety
+I feel uneasy and on edge,Anxiety
+I am afraid of making a mistake,Anxiety
+I feel butterflies in my stomach but in a bad way,Anxiety
+What if I fail everything?,Anxiety
+I am constantly terrified,Anxiety
+I can't relax no matter what I do,Anxiety
+I feel like something terrible is about to happen,Anxiety
+My hands are sweating and I am shaking,Anxiety
+I am so nervous I feel sick,Anxiety
+I can't quiet my racing thoughts,Anxiety
+I am overanalyzing every little detail,Anxiety
+I feel paralyzed by fear,Anxiety
+I am scared to leave the house because of panic,Anxiety
+My chest feels tight and it hurts,Anxiety
+I am dreading tomorrow,Anxiety
+I can't sleep because I am worrying too much,Anxiety
+I feel jittery and restless,Anxiety
+Everyone is judging me I know it,Anxiety
+I am freaking out right now,Anxiety
+I feel a sense of doom,Anxiety
+My mind won't shut off,Anxiety
+I am scared of social situations,Anxiety
+I feel like I am losing control,Anxiety
+I am hyperventilating,Anxiety
+I am worried about what people think of me,Anxiety
+I feel tense and jumpy,Anxiety
+I am afraid of the unknown,Anxiety
+I can't catch my breath,Anxiety
+My stomach is in knots,Anxiety
+I have too much work and not enough time,Stress
+I feel overwhelmed by all my responsibilities,Stress
+I am under so much pressure right now,Stress
+I just can't cope with this workload,Stress
+I feel burned out and exhausted,Stress
+I am frustrated with how much I have to do,Stress
+My head hurts from thinking too much,Stress
+I feel like I am drowning in work,Stress
+I am tense and my shoulders hurt,Stress
+I just need a break from everything,Stress
+I have reached my limit today,Stress
+I am snapping at everyone because I am stressed,Stress
+There are too many deadlines,Stress
+I can't handle this much pressure,Stress
+I feel like my head is going to explode,Stress
+I have too many assignments due,Stress
+My boss is demanding too much from me,Stress
+School is stressing me out so much,Stress
+I have zero time for myself,Stress
+I am running on empty,Stress
+The pressure is eating me alive,Stress
+I am so busy I forget to eat,Stress
+I feel pulled in a million directions,Stress
+I just want to scream from frustration,Stress
+I have a massive headache from stress,Stress
+I am overworked and underpaid,Stress
+I have a mountain of tasks to finish,Stress
+I feel like I am always behind,Stress
+I am stressed about money,Stress
+I am stressed about my grades,Stress
+Everything is piling up on me,Stress
+I need a vacation badly,Stress
+I can't focus because of the stress,Stress
+I feel so alone in this world,Lonely
+No one understands me or cares,Lonely
+I wish I had someone to talk to,Lonely
+I feel isolated from everyone,Lonely
+I miss having friends around me,Lonely
+I feel disconnected from the people around me,Lonely
+I am by myself all the time and it hurts,Lonely
+I just want someone to hug me,Lonely
+I feel like an outsider everywhere I go,Lonely
+I feel trapped and lonely in this house,Lonely
+I need to escape this place and find people,Lonely
+I feel abandoned by everyone,Lonely
+No one texts me or calls me,Lonely
+I feel invisible in a crowd,Lonely
+Everyone else has friends except me,Lonely
+I spend all my weekends alone,Lonely
+I just want to belong somewhere,Lonely
+The silence in my room is deafening,Lonely
+I feel like no one truly knows me,Lonely
+I am craving human connection,Lonely
+I feel left out,Lonely
+Why is it so hard to make friends?,Lonely
+I feel like a ghost,Lonely
+The world is too quiet today,Lonely
+It is so quiet and I hate it,Lonely
+The silence is making me feel alone,Lonely
+It is too quiet in this house,Lonely
+I am sitting in silence by myself,Lonely
+Everything feels empty and quiet,Lonely
+I wish it wasn't so quiet here,Lonely
+The quietness makes me feel isolated,Lonely
+I have nobody to share my day with,Lonely
+I feel separate from the rest of the world,Lonely
+I walk alone and eat alone,Lonely
+I wish I was popular,Lonely
+I feel rejected by society,Lonely
+No one remembers my birthday,Lonely
+I feel like a stranger in my own life,Lonely
+I had a pretty good day today,Normal
+I am just going for a walk,Normal
+I feel okay nothing special,Normal
+Watching a movie and relaxing,Normal
+Just finished lunch and feeling good,Normal
+I am happy with how things are going,Normal
+Today was a productive day,Normal
+I feel calm and content,Normal
+Just hanging out with friends,Normal
+Life is good right now,Normal
+I am excited for the weekend,Normal
+I feel peaceful and relaxed,Normal
+Nothing much is happening just chilling,Normal
+I am feeling positive today,Normal
+Great weather outside today,Normal
+I am listening to music and vibing,Normal
+Feeling energetic and ready to go,Normal
+I am grateful for what I have,Normal
+Just doing my daily routine,Normal
+I feel balanced and fine,Normal
+Everything is going according to plan,Normal
+I am enjoying this beautiful day,Normal
+Feeling fresh after a good sleep,Normal
+I am reading a book,Normal
+Just cooking dinner,Normal
+I feel neutral,Normal
+Not sad not happy just okay,Normal
+I am looking forward to tomorrow,Normal
+I feel confident today,Normal
+Just browsing the internet,Normal
+I am cleaning my room,Normal
+I feel steady and stable,Normal
+I am just doing laundry,Normal
+Bored and watching TV,Normal
+Just sitting here doing nothing,Normal
+A regular boring day,Normal
+Went to the grocery store,Normal
+Stuck in traffic as usual,Normal
+Just checking my emails,Normal
+Nothing interesting happened today,Normal
+Just tired from a long day,Normal
+Routine is same as always,Normal
+I am just drinking water,Normal
+Waiting for the bus,Normal
+My day was average,Normal
+I can't see the light at the end of the tunnel,Depression
+My spirit feels crushed under a heavy weight,Depression
+I smile but I don't feel anything inside,Depression
+It's like living in a permanent fog,Depression
+Food doesn't even taste like anything anymore,Depression
+I'm sleeping all day just to avoid being awake,Depression
+I feel hollowed out like a shell,Depression
+The days just blur together into nothingness,Depression
+I'm dragging my feet through quicksand,Depression
+Why does everyone else look so happy?,Depression
+I'm stuck in a loop of sadness,Depression
+My motivation has completely evaporated,Depression
+I feel like I'm watching my life from far away,Depression
+Nothing excites me not even my hobbies,Depression
+I just want to curl up and disappear for a while,Depression
+It hurts to even get dressed in the morning,Depression
+I feel like a waste of space,Depression
+The gloom is suffocating me,Depression
+I don't have the strength to fake a smile today,Depression
+I feel so fragile like I might shatter,Depression
+My mind is a dark place right now,Depression
+I'm tired of feeling this low all the time,Depression
+I feel like I'm broken beyond repair,Depression
+It's a struggle to find a reason to get up,Depression
+I'm drowning in a sea of melancholy,Depression
+I feel numb to everything around me,Depression
+I'm just existing not living,Depression
+The world feels cold and gray to me,Depression
+I'm isolating myself because I have no energy,Depression
+I feel a deep aches in my chest from sadness,Depression
+My thoughts are my own worst enemy,Depression
+I can't remember the last time I genuinely laughed,Depression
+I feel like a burden to my family,Depression
+Everything seems pointless and dull,Depression
+I'm losing hope that things will get better,Depression
+I feel so unlovable and unworthy,Depression
+The sadness is a physical weight on my shoulders,Depression
+I'm fighting a losing battle with my mind,Depression
+I feel like crying until I have no tears left,Depression
+I'm just so incredibly weary of life,Depression
+I feel the urge to jump off a bridge,Crisis
+I'm planning how to say goodbye,Crisis
+I have access to pills and I'm scared,Crisis
+I'm writing a note to my family,Crisis
+I don't think I can make it through the night safely,Crisis
+The voice in my head is telling me to do it,Crisis
+I'm standing on the edge right now,Crisis
+I have a weapon and I might use it,Crisis
+Please make the pain stop permanently,Crisis
+I'm looking up ways to end my life,Crisis
+I feel unsafe with myself right now,Crisis
+I'm afraid I'm going to do something drastic,Crisis
+I can't trust myself alone tonight,Crisis
+I'm done fighting I'm checking out,Crisis
+I'm saying my final goodbyes to friends,Crisis
+I just cut myself and I can't stop,Crisis
+I'm searching for methods to die,Crisis
+I hope I get hit by a car today,Crisis
+I'm praying for death to take me,Crisis
+I'm dangerously close to ending it,Crisis
+My heart feels like it's going to beat out of my chest,Anxiety
+I'm shaking like a leaf and can't stop,Anxiety
+I feel dizzy and lightheaded from fear,Anxiety
+My palms are sweaty and cold,Anxiety
+I have a lump in my throat and can't swallow,Anxiety
+I feel like everyone is staring at me,Anxiety
+I'm terrified of making a fool of myself,Anxiety
+My mind is replaying every mistake I've ever made,Anxiety
+I feel like I'm going crazy with worry,Anxiety
+I'm pacing around the room nervously,Anxiety
+I can't sit still I'm so jittery,Anxiety
+I feel like I'm in danger even though I'm safe,Anxiety
+My thoughts are spinning out of control,Anxiety
+I'm afraid to answer the phone,Anxiety
+I feel a tightness in my chest like a heart attack,Anxiety
+I'm sweating profusely for no reason,Anxiety
+I'm dreading the social event tonight,Anxiety
+I feel like I'm losing my grip on reality,Anxiety
+I'm worried about things that haven't happened yet,Anxiety
+I feel nauseous from all this worry,Anxiety
+I'm scared I'm going to say the wrong thing,Anxiety
+I feel trapped in this situation,Anxiety
+My breathing is shallow and rapid,Anxiety
+I'm constantly checking the locks,Anxiety
+I feel on high alert all the time,Anxiety
+I'm expecting the worst case scenario,Anxiety
+I can't focus on anything but my fear,Anxiety
+I feel like running away and hiding,Anxiety
+My muscles are so tense they hurt,Anxiety
+I'm scared of failing in front of others,Anxiety
+I'm trembling with nervousness,Anxiety
+I feel like I'm about to faint from panic,Anxiety
+I'm overwhelmed by loud noises right now,Anxiety
+I feel exposed and vulnerable,Anxiety
+I'm worried I've offended someone,Anxiety
+I'm up all night with racing thoughts,Anxiety
+I feel like the walls are closing in,Anxiety
+I'm second guessing every decision I make,Anxiety
+I feel a sense of impending doom,Anxiety
+I'm too anxious to speak up,Anxiety
+I'm biting my nails until they bleed,Anxiety
+I feel like screaming but I can't,Anxiety
+I'm scared of the dark all of a sudden,Anxiety
+I feel like a nervous wreck,Anxiety
+My deadline is tomorrow and I haven't started,Stress
+I'm juggling too many balls and dropping them,Stress
+I feel like I'm drowning in paperwork,Stress
+My boss is breathing down my neck,Stress
+I have exams all week and no time to study,Stress
+I'm so stressed my hair is falling out,Stress
+I can't catch a break with all these bills,Stress
+I feel like I'm running on a hamster wheel,Stress
+I'm spreading myself too thin,Stress
+I have zero work life balance right now,Stress
+I'm exhausted from overworking,Stress
+My schedule is packed back to back,Stress
+I feel the pressure mounting every hour,Stress
+I'm trying to do three peoples jobs,Stress
+I'm so busy I haven't seen my family in weeks,Stress
+I'm stressed about the future of my career,Stress
+I feel like I'm about to crack under pressure,Stress
+I'm neglecting my health because of work,Stress
+I have anxiety about my financial situation,Stress
+I'm pulling an all nighter to finish this,Stress
+I feel crushed by expectations,Stress
+I'm constantly putting out fires at work,Stress
+I have no time to breathe let alone relax,Stress
+I'm worried I won't make rent this month,Stress
+I feel like I'm failing at everything I try,Stress
+My to-do list is never ending,Stress
+I'm stressing over every little detail,Stress
+I feel overwhelmed by the noise and chaos,Stress
+I'm burned out from studying so hard,Stress
+I just want to quit everything and run away,Stress
+I feel like a zombie from lack of sleep,Stress
+I'm stressed about the upcoming presentation,Stress
+I feel like I'm carrying the weight of the world,Stress
+I'm irritated and short tempered from stress,Stress
+I feel physically sick from the pressure,Stress
+I'm grinding my teeth in my sleep,Stress
+I feel like there aren't enough hours in the day,Stress
+I'm struggling to keep my head above water,Stress
+I'm worried about letting people down,Stress
+I feel completely overloaded,Stress
+I'm the only one in the room but I feel invisible,Lonely
+I scroll through social media and feel left out,Lonely
+I haven't had a real conversation in days,Lonely
+I feel a pang of jealousy seeing couples,Lonely
+I'm always the one reaching out first,Lonely
+I feel like nobody truly gets me,Lonely
+I'm eating dinner alone again,Lonely
+I miss the warmth of another person,Lonely
+I feel like I'm on the outside looking in,Lonely
+I have no one to call when I'm sad,Lonely
+I feel a deep void where connection should be,Lonely
+I'm surrounded by people but feel alone,Lonely
+I wish I had a best friend,Lonely
+I feel disconnected from my own generation,Lonely
+I'm tired of being single and alone,Lonely
+I feel like an alien on this planet,Lonely
+I have no one to share my achievements with,Lonely
+I feel the silence pressing in on me,Lonely
+I'm longing for a meaningful conversation,Lonely
+I feel like I don't fit in anywhere,Lonely
+I'm spending my birthday by myself,Lonely
+I feel abandoned by my old friends,Lonely
+I wish someone would check in on me,Lonely
+I feel like a castaway on an island,Lonely
+I'm hugging a pillow to feel comfort,Lonely
+I feel like no one would notice if I left,Lonely
+I'm craving a simple hug,Lonely
+I feel isolated in my struggles,Lonely
+I have no one to go to the movies with,Lonely
+I feel a deep ache of solitude,Lonely
+Just had a great workout at the gym,Normal
+I'm excited to try this new recipe,Normal
+Feeling pretty average today nothing new,Normal
+I'm just organizing my closet,Normal
+Had a nice chat with my mom,Normal
+I'm planning a trip for next month,Normal
+Just watering my plants,Normal
+Feeling content with a cup of coffee,Normal
+I'm watching a documentary on space,Normal
+Just finished a good book,Normal
+I'm going for a run in the park,Normal
+Feeling refreshed after a shower,Normal
+I'm just sketching in my notebook,Normal
+Had a tasty sandwich for lunch,Normal
+I'm looking forward to the game tonight,Normal
+Just paying some bills online,Normal
+Feeling accomplished after cleaning,Normal
+I'm listening to a podcast,Normal
+Just taking the dog for a walk,Normal
+Feeling calm and centered today,Normal
+I'm trying out a new video game,Normal
+Just updated my phone software,Normal
+Feeling thankful for the sunshine,Normal
+I'm writing in my journal,Normal
+Just changing the bed sheets,Normal
+Feeling okay just a regular Tuesday,Normal
+I'm planning my outfit for tomorrow,Normal
+Just scrolling through memes,Normal
+Feeling steady and grounded,Normal
+I'm making a grocery list,Normal
+Just meditating for ten minutes,Normal
+Feeling good about my progress,Normal
+I'm rewatching my favorite show,Normal
+Just fixing a leaky faucet,Normal
+Feeling neutral about everything,Normal
+I'm practicing the guitar,Normal
+Just waiting for a package delivery,Normal
+Feeling ready for the week ahead,Normal
+I'm just doing some light stretching,Normal
+Everything is fine just chilling,Normal
+I feel like I'm moving through molasses,Depression
+My favorite song sounds annoying now,Depression
+I haven't showered in three days,Depression
+It feels like a gray filter is over my eyes,Depression
+I'm just rotting in bed all weekend,Depression
+Why is everything so exhausting?,Depression
+I feel completely drained of life,Depression
+I can't bring myself to brush my teeth,Depression
+I'm jealous of people who can smile,Depression
+I feel like a ghost haunting my own house,Depression
+Nothing matters in the long run anyway,Depression
+I'm trapped in a fog that won't lift,Depression
+My chest feels heavy like a stone is sitting on it,Depression
+I'm too tired to even watch TV,Depression
+I feel like I've lost my spark,Depression
+The future looks like a black hole,Depression
+I'm just going through the motions robotically,Depression
+I feel dead inside even though I'm breathing,Depression
+I'm grieving who I used to be,Depression
+Sadness is the only thing I feel anymore,Depression
+I'm shutting everyone out because it's easier,Depression
+I feel like I'm slowly fading away,Depression
+I can't find the energy to reply to texts,Depression
+I'm disappointed when I wake up in the morning,Depression
+I feel like a spectator in my own life,Depression
+I'm sinking deeper every single day,Depression
+I don't have the will to improve my situation,Depression
+I feel chronically empty,Depression
+I'm tired of putting on a mask for everyone,Depression
+I feel like crying but the tears won't come,Depression
+I'm just so bored with being alive,Depression
+I feel like a burden to my friends,Depression
+Everything tastes like ash,Depression
+I'm losing the battle against the darkness,Depression
+I feel like I'm made of glass,Depression
+I'm withdrawing from everything I used to love,Depression
+I feel a constant low-grade misery,Depression
+I'm stuck in a pit and can't climb out,Depression
+I feel like I'm wasting oxygen,Depression
+I'm just waiting for the day to end,Depression
+I'm scared I might actually do it this time,Crisis
+I'm researching how to overdose,Crisis
+I feel like the world would be better without me,Crisis
+I'm writing my will just in case,Crisis
+I can't stop thinking about jumping,Crisis
+I have a plan and I'm going to execute it,Crisis
+I'm saying goodbye to my pets,Crisis
+I feel like I'm already dead,Crisis
+I'm looking for a way out of this pain,Crisis
+I don't want to see tomorrow,Crisis
+I'm scared of what I might do to myself tonight,Crisis
+I feel an overwhelming urge to end it,Crisis
+I'm texting my mom 'I love you' for the last time,Crisis
+I'm standing on the ledge,Crisis
+I have the pills in my hand,Crisis
+I'm done with this life,Crisis
+I can't handle another second of this,Crisis
+I'm hoping I don't wake up,Crisis
+I feel like suicide is my only option,Crisis
+I'm crying because I know what I have to do,Crisis
+I feel like I'm about to explode from panic,Anxiety
+My hands are shaking so bad I can't type,Anxiety
+I feel like I'm suffocating in this room,Anxiety
+I'm terrified that everyone is laughing at me,Anxiety
+My heart is racing like a drum,Anxiety
+I feel a wave of dread washing over me,Anxiety
+I'm obsessing over a mistake I made years ago,Anxiety
+I feel like I'm going to vomit from nerves,Anxiety
+I'm scared to check my bank account,Anxiety
+I feel like I'm losing my mind,Anxiety
+I'm hyper-aware of every noise,Anxiety
+I feel like something bad is lurking around the corner,Anxiety
+I'm sweating through my shirt,Anxiety
+I can't look people in the eye,Anxiety
+I feel like I'm in a nightmare,Anxiety
+I'm overthinking a simple text message,Anxiety
+I feel paralyzed by all the choices,Anxiety
+I'm picking at my skin nervously,Anxiety
+I feel like an imposter and they will find out,Anxiety
+I'm scared to drive today,Anxiety
+I feel a knot in my stomach that won't go away,Anxiety
+I'm constantly asking for reassurance,Anxiety
+I feel like the ground is shaking,Anxiety
+I'm afraid of being judged,Anxiety
+I feel like I can't escape my thoughts,Anxiety
+I'm avoiding everyone because I'm scared,Anxiety
+I feel tense like a coiled spring,Anxiety
+I'm worrying about things out of my control,Anxiety
+I feel lightheaded and dizzy,Anxiety
+I'm scared of having a panic attack in public,Anxiety
+I have three essays due and I'm freaking out,Stress
+My boss just dumped a huge project on me,Stress
+I feel like my head is in a vice,Stress
+I'm so behind on my work it's not funny,Stress
+I feel like screaming into a pillow,Stress
+I'm working two jobs and I'm exhausted,Stress
+I feel like I'm chasing a bus I can't catch,Stress
+My schedule is a disaster,Stress
+I'm snapping at my family because of work,Stress
+I feel like I'm drowning in debt,Stress
+I'm studying until 3am every night,Stress
+I feel like I have no time for myself,Stress
+I'm running on caffeine and panic,Stress
+I feel like I'm about to burn out completely,Stress
+My to-do list is mocking me,Stress
+I'm stressed about finding a new apartment,Stress
+I feel like I'm failing all my classes,Stress
+I'm juggling family drama and work,Stress
+I feel like my brain is fried,Stress
+I'm worried about layoffs at work,Stress
+I feel like I'm carrying a boulder uphill,Stress
+I'm trying to plan a wedding and it's too much,Stress
+I feel like I'm running out of time,Stress
+I'm dealing with a difficult client,Stress
+I feel tension headaches every day,Stress
+I'm neglecting my friends to finish this project,Stress
+I feel like I can't relax even on weekends,Stress
+I'm worried about my parents' health,Stress
+I feel overwhelmed by the city noise,Stress
+I'm gritting my teeth constantly,Stress
+No one wished me a happy birthday,Lonely
+I feel like I'm invisible to everyone,Lonely
+I'm scrolling through old photos of friends,Lonely
+I feel a deep ache in my chest from solitude,Lonely
+I'm the only one without a partner,Lonely
+I feel like I don't have a tribe,Lonely
+I'm eating ice cream alone on a Friday,Lonely
+I feel disconnected from the world,Lonely
+I wish I had someone to vent to,Lonely
+I feel like an outcast at school,Lonely
+I'm hugging my dog because I'm lonely,Lonely
+I feel like no one understands my jokes,Lonely
+I'm jealous of happy families,Lonely
+I feel like I'm shouting into a void,Lonely
+I have zero new messages,Lonely
+I feel like a background character,Lonely
+I'm craving a deep conversation,Lonely
+I feel left behind by my peers,Lonely
+I wish I had a date for the event,Lonely
+I feel awkward going out alone,Lonely
+I'm missing my long-distance friend,Lonely
+I feel like no one values my company,Lonely
+I'm always the third wheel,Lonely
+I feel empty when I come home to a quiet house,Lonely
+I wish someone would ask how I am,Lonely
+I feel like I'm drifting in space,Lonely
+I'm trying to make friends but it's hard,Lonely
+I feel a gap where a best friend should be,Lonely
+I'm crying because I feel so isolated,Lonely
+I feel like I don't belong here,Lonely
+Just beat my high score on a game,Normal
+I'm making pancakes for breakfast,Normal
+Feeling pretty chill today,Normal
+I'm watering the garden,Normal
+Just bought a new shirt I like,Normal
+I'm excited for the movie premiere,Normal
+Feeling satisfied with my work,Normal
+I'm planning a weekend hike,Normal
+Just listening to the rain outside,Normal
+Feeling cozy in my blanket,Normal
+I'm learning a new language,Normal
+Just polished my car,Normal
+Feeling refreshed after a nap,Normal
+I'm organizing my bookshelf,Normal
+Just had a funny conversation,Normal
+Feeling optimistic about the weather,Normal
+I'm trying a new restaurant tonight,Normal
+Just finished a crossword puzzle,Normal
+Feeling balanced and calm,Normal
+I'm watching birds in the park,Normal
+Just text my brother,Normal
+Feeling grateful for my health,Normal
+I'm drawing a picture,Normal
+Just updated my playlist,Normal
+Feeling ready to tackle the day,Normal
+I'm baking cookies,Normal
+Just cleaned the kitchen,Normal
+Feeling content with my life,Normal
+I'm researching a vacation spot,Normal
+Just trimmed my beard,Normal
+Feeling good after yoga,Normal
+I'm writing a poem,Normal
+Just bought groceries,Normal
+Feeling happy about a small win,Normal
+I'm fixing my bike,Normal
+Just watching the sunset,Normal
+Feeling peaceful right now,Normal
+I'm knitting a scarf,Normal
+Just charged my phone,Normal
+Feeling curious about a new topic,Normal
