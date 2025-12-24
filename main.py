@@ -6,6 +6,7 @@ import os
 import google.generativeai as genai
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
+import json
 
 # Import our new "Brain"
 import logic_core
@@ -26,7 +27,8 @@ class ChatManager:
 
     def get_chat(self, user_id):
         if user_id not in self.sessions:
-            model = genai.GenerativeModel('gemini-2.5-flash')
+            # ✅ CORRECTED MODEL NAME: gemini-1.5-flash
+            model = genai.GenerativeModel('gemini-1.5-flash')
             self.sessions[user_id] = model.start_chat(history=[
                 {"role": "user", "parts": ["You are HushMind, a warm, empathetic mental health AI friend. Keep answers short (max 2-3 sentences)."]},
                 {"role": "model", "parts": ["Understood. I am HushMind, here to listen and support."]}
@@ -47,7 +49,7 @@ except Exception as e:
 # 4. Server Setup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("\n🚀 HUSHMIND SERVER IS RUNNING (Refactored & Secure) 🚀\n")
+    print("\n🚀 HUSHMIND SERVER IS RUNNING (Dual-Brain Mode) 🚀\n")
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -66,6 +68,7 @@ class TextRequest(BaseModel):
 
 # --- ENDPOINTS ---
 
+# ⚡ FAST BRAIN: For Mood Graph & Chat Colors
 @app.post("/predict")
 def predict_mood(request: TextRequest):
     if not classifier:
@@ -78,6 +81,63 @@ def predict_mood(request: TextRequest):
         "feedback": result["feedback"],
         "color_code": result["color_code"]
     }
+
+# 🧠 DEEP BRAIN: For Diary Analysis (Title, Advice, Summary)
+@app.post("/analyze_journal")
+async def analyze_journal(request: TextRequest):
+    # 1. Safety Check First
+    is_crisis, crisis_msg = logic_core.check_safety(request.text)
+    if is_crisis:
+        return {
+            "mood": "Crisis",
+            "analysis": {
+                "title": "Safety First",
+                "summary": "We detected distress in your message.",
+                "advice": "Please reach out to a professional or helpline immediately.",
+                "keywords": ["Help", "Support", "Safety"]
+            }
+        }
+
+    # 2. Get Basic Mood (Backup)
+    ml_label = "Neutral"
+    if classifier:
+        ml_label = classifier.predict([request.text])[0]
+        
+    # 3. Ask Gemini for "Therapist Report"
+    try:
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        prompt = f"""
+        You are a warm, empathetic psychologist. Analyze this diary entry: "{request.text}"
+        
+        Return ONLY a JSON object (no markdown) with this exact format:
+        {{
+            "mood": "One word mood (e.g. Happy, Anxious, Calm, Proud)",
+            "title": "A short, poetic title for this entry (3-5 words)",
+            "summary": "A warm, 1-sentence validation of how they feel.",
+            "advice": "One small, actionable, positive step they can take right now.",
+            "keywords": ["Theme1", "Theme2", "Theme3"]
+        }}
+        """
+        response = model.generate_content(prompt)
+        text_resp = response.text.replace("```json", "").replace("```", "").strip()
+        analysis = json.loads(text_resp)
+        
+        return {
+            "mood": analysis.get("mood", ml_label),
+            "analysis": analysis 
+        }
+
+    except Exception as e:
+        print(f"AI Error: {e}")
+        return {
+            "mood": ml_label,
+            "analysis": {
+                "title": "Daily Entry",
+                "summary": "Saved successfully.",
+                "advice": "Keep taking care of yourself.",
+                "keywords": ["Journal"]
+            }
+        }
 
 @app.post("/chat")
 async def chat_with_ai(request: TextRequest):
