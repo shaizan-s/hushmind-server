@@ -3,44 +3,42 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import pickle
 import os
-import google.generativeai as genai
+from groq import Groq # 🚀 NEW: Using Groq (Llama 3)
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 import json
 
-# Import our new "Brain"
+# Import our logic brain
 import logic_core
 
 # 1. Load Environment Variables
 load_dotenv()
-API_KEY = os.getenv("GOOGLE_API_KEY")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-if not API_KEY:
-    print("❌ ERROR: GOOGLE_API_KEY not found in .env file")
-else:
-    genai.configure(api_key=API_KEY)
+if not GROQ_API_KEY:
+    print("❌ ERROR: GROQ_API_KEY not found. Please add it to Render Environment.")
+
+# Initialize Groq Client
+client = Groq(api_key=GROQ_API_KEY)
 
 # 2. Chat Memory Management
 class ChatManager:
     def __init__(self):
-        self.sessions = {}
+        self.histories = {}
 
-    def get_chat(self, user_id):
-        if user_id not in self.sessions:
-            # 🛡️ BULLETPROOF MODEL SELECTION
-            # Try 1.5 Flash first (Best). If server is old, fall back to Pro.
-            try:
-                model = genai.GenerativeModel('gemini-1.5-flash')
-                print("✨ Using Gemini 1.5 Flash")
-            except Exception:
-                print("⚠️ 1.5 Flash failed, falling back to Gemini Pro")
-                model = genai.GenerativeModel('gemini-pro')
+    def get_history(self, user_id):
+        if user_id not in self.histories:
+            self.histories[user_id] = [
+                {"role": "system", "content": "You are HushMind, a warm, empathetic mental health AI friend. Keep answers short (max 2-3 sentences). Be supportive."}
+            ]
+        return self.histories[user_id]
 
-            self.sessions[user_id] = model.start_chat(history=[
-                {"role": "user", "parts": ["You are HushMind, a warm, empathetic mental health AI friend. Keep answers short (max 2-3 sentences)."]},
-                {"role": "model", "parts": ["Understood. I am HushMind, here to listen and support."]}
-            ])
-        return self.sessions[user_id]
+    def add_message(self, user_id, role, content):
+        history = self.get_history(user_id)
+        history.append({"role": role, "content": content})
+        # Keep memory short to save space (last 10 messages)
+        if len(history) > 11: 
+            self.histories[user_id] = [history[0]] + history[-10:]
 
 chat_manager = ChatManager()
 
@@ -56,7 +54,7 @@ except Exception as e:
 # 4. Server Setup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("\n🚀 HUSHMIND SERVER IS LIVE (Bulletproof Mode) 🚀\n")
+    print("\n🚀 HUSHMIND SERVER IS LIVE (Powered by Llama 3) 🚀\n")
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -79,59 +77,72 @@ class TextRequest(BaseModel):
 def predict_mood(request: TextRequest):
     if not classifier:
         return {"error": "Model not loaded"}
-    
-    try:
-        ml_label = classifier.predict([request.text])[0]
-        result = logic_core.resolve_mood(request.text, ml_label, request.username)
-        return {
-            "mood": result["mood"],
-            "feedback": result["feedback"],
-            "color_code": result["color_code"]
-        }
-    except Exception as e:
-        print(f"Predict Error: {e}")
-        return {"mood": "Neutral", "feedback": "I am listening.", "color_code": "0xFFFFFFFF"}
+        
+    ml_label = classifier.predict([request.text])[0]
+    result = logic_core.resolve_mood(request.text, ml_label, request.username)
+    return {
+        "mood": result["mood"],
+        "feedback": result["feedback"],
+        "color_code": result["color_code"]
+    }
 
 @app.post("/analyze_journal")
 async def analyze_journal(request: TextRequest):
-    # Safety Check
+    # 1. Safety Check
     is_crisis, crisis_msg = logic_core.check_safety(request.text)
     if is_crisis:
-        return {"mood": "Crisis", "analysis": {"title": "Safety First", "summary": "Crisis detected.", "advice": "Please seek professional help.", "keywords": ["Help"]}}
+        return {
+            "mood": "Crisis",
+            "analysis": {
+                "title": "Safety First",
+                "summary": "We detected distress.",
+                "advice": "Please reach out to a professional immediately.",
+                "keywords": ["Help", "Support"]
+            }
+        }
 
-    # Smart Mood
+    # 2. Smart Mood Logic
     raw_label = "Neutral"
     if classifier:
         raw_label = classifier.predict([request.text])[0]
     resolved_result = logic_core.resolve_mood(request.text, raw_label, request.username)
-    smart_mood = resolved_result["mood"] 
-        
-    try:
-        # 🛡️ BULLETPROOF SELECTION FOR JOURNAL TOO
-        try:
-            model = genai.GenerativeModel('gemini-1.5-flash')
-        except:
-            model = genai.GenerativeModel('gemini-pro')
+    smart_mood = resolved_result["mood"]
 
-        prompt = f"""
-        Analyze this diary entry: "{request.text}"
-        Detected mood: {smart_mood}.
-        Return ONLY JSON:
-        {{
-            "mood": "{smart_mood}", 
-            "title": "Short poetic title",
-            "summary": "One sentence summary",
-            "advice": "One actionable step",
-            "keywords": ["Tag1", "Tag2"]
-        }}
-        """
-        response = model.generate_content(prompt)
-        text_resp = response.text.replace("```json", "").replace("```", "").strip()
-        analysis = json.loads(text_resp)
+    # 3. Llama 3 Analysis
+    try:
+        completion = client.chat.completions.create(
+            model="llama3-8b-8192", # ⚡ Fast & Smart Model
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a psychologist. Analyze the diary entry. Return ONLY valid JSON."
+                },
+                {
+                    "role": "user",
+                    "content": f"""
+                    Analyze this entry: "{request.text}"
+                    The detected mood is: {smart_mood}.
+                    
+                    Return ONLY a JSON object with this format:
+                    {{
+                        "mood": "{smart_mood}", 
+                        "title": "Short poetic title (3-5 words)",
+                        "summary": "One warm sentence summary",
+                        "advice": "One small positive action",
+                        "keywords": ["Theme1", "Theme2"]
+                    }}
+                    """
+                }
+            ],
+            temperature=0.5,
+            response_format={"type": "json_object"} # Forces JSON
+        )
+        
+        analysis = json.loads(completion.choices[0].message.content)
         return {"mood": analysis.get("mood", smart_mood), "analysis": analysis}
 
     except Exception as e:
-        print(f"AI Journal Error: {e}")
+        print(f"Llama Error: {e}")
         return {
             "mood": smart_mood,
             "analysis": {
@@ -152,15 +163,26 @@ async def chat_with_ai(request: TextRequest):
         if is_crisis:
             return {"reply": crisis_msg, "mood": "Crisis", "is_crisis": True}
 
-        # Send to Gemini
-        chat = chat_manager.get_chat(user_id)
-        response = chat.send_message(request.text)
+        # Update History
+        chat_manager.add_message(user_id, "user", request.text)
+        history = chat_manager.get_history(user_id)
+
+        # Get Reply from Llama 3
+        completion = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=history,
+            temperature=0.7,
+            max_tokens=150
+        )
         
-        return {"reply": response.text, "is_crisis": False}
+        ai_reply = completion.choices[0].message.content
+        chat_manager.add_message(user_id, "assistant", ai_reply)
+        
+        return {"reply": ai_reply, "is_crisis": False}
 
     except Exception as e:
-        print(f"⚠️ Gemini Chat Error: {e}")
+        print(f"Chat Error: {e}")
         return {
-            "reply": "I'm having trouble connecting to my brain right now. Please try again in 1 minute.", 
+            "reply": "I'm having a little trouble thinking right now. Please try again.", 
             "is_crisis": False
         }
