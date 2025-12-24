@@ -83,6 +83,7 @@ def predict_mood(request: TextRequest):
     }
 
 # 🧠 DEEP BRAIN: For Diary Analysis (Title, Advice, Summary)
+# 🧠 DEEP BRAIN: For Diary Analysis (Title, Advice, Summary)
 @app.post("/analyze_journal")
 async def analyze_journal(request: TextRequest):
     # 1. Safety Check First
@@ -98,10 +99,15 @@ async def analyze_journal(request: TextRequest):
             }
         }
 
-    # 2. Get Basic Mood (Backup)
-    ml_label = "Neutral"
+    # 2. Get Smart Mood (With Keyword Overrides)
+    # This ensures "promotion" -> "Happy" even if ML fails
+    raw_label = "Neutral"
     if classifier:
-        ml_label = classifier.predict([request.text])[0]
+        raw_label = classifier.predict([request.text])[0]
+    
+    # ✅ KEY FIX: Use logic_core to fix the mood BEFORE asking Gemini
+    resolved_result = logic_core.resolve_mood(request.text, raw_label, request.username)
+    smart_mood = resolved_result["mood"] 
         
     # 3. Ask Gemini for "Therapist Report"
     try:
@@ -109,28 +115,30 @@ async def analyze_journal(request: TextRequest):
         prompt = f"""
         You are a warm, empathetic psychologist. Analyze this diary entry: "{request.text}"
         
-        Return ONLY a JSON object (no markdown) with this exact format:
+        Return ONLY a JSON object (no markdown) with this format:
         {{
-            "mood": "One word mood (e.g. Happy, Anxious, Calm, Proud)",
+            "mood": "{smart_mood}", 
             "title": "A short, poetic title for this entry (3-5 words)",
             "summary": "A warm, 1-sentence validation of how they feel.",
             "advice": "One small, actionable, positive step they can take right now.",
             "keywords": ["Theme1", "Theme2", "Theme3"]
         }}
         """
+        # Note: We hinted the mood to Gemini using {smart_mood} to guide it correctly!
+        
         response = model.generate_content(prompt)
         text_resp = response.text.replace("```json", "").replace("```", "").strip()
         analysis = json.loads(text_resp)
         
         return {
-            "mood": analysis.get("mood", ml_label),
+            "mood": analysis.get("mood", smart_mood), # Use AI mood, or fallback to smart_mood
             "analysis": analysis 
         }
 
     except Exception as e:
         print(f"AI Error: {e}")
         return {
-            "mood": ml_label,
+            "mood": smart_mood, # ✅ Fallback is now CORRECT (Happy, not Stress)
             "analysis": {
                 "title": "Daily Entry",
                 "summary": "Saved successfully.",
@@ -138,7 +146,6 @@ async def analyze_journal(request: TextRequest):
                 "keywords": ["Journal"]
             }
         }
-
 @app.post("/chat")
 async def chat_with_ai(request: TextRequest):
     try:
