@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import pickle
 import os
-from groq import Groq # 🚀 NEW: Using Groq (Llama 3)
+from groq import Groq 
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 import json
@@ -13,10 +13,12 @@ import logic_core
 
 # 1. Load Environment Variables
 load_dotenv()
+# ⚠️ If this still fails on Render, you can hardcode the key here temporarily:
+# GROQ_API_KEY = "gsk_..." 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 if not GROQ_API_KEY:
-    print("❌ ERROR: GROQ_API_KEY not found. Please add it to Render Environment.")
+    print("❌ ERROR: GROQ_API_KEY not found.")
 
 # Initialize Groq Client
 client = Groq(api_key=GROQ_API_KEY)
@@ -36,7 +38,6 @@ class ChatManager:
     def add_message(self, user_id, role, content):
         history = self.get_history(user_id)
         history.append({"role": role, "content": content})
-        # Keep memory short to save space (last 10 messages)
         if len(history) > 11: 
             self.histories[user_id] = [history[0]] + history[-10:]
 
@@ -54,7 +55,7 @@ except Exception as e:
 # 4. Server Setup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("\n🚀 HUSHMIND SERVER IS LIVE (Powered by Llama 3) 🚀\n")
+    print("\n🚀 HUSHMIND SERVER IS LIVE (Llama 3.3 Fixed) 🚀\n")
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -88,54 +89,36 @@ def predict_mood(request: TextRequest):
 
 @app.post("/analyze_journal")
 async def analyze_journal(request: TextRequest):
-    # 1. Safety Check
     is_crisis, crisis_msg = logic_core.check_safety(request.text)
     if is_crisis:
-        return {
-            "mood": "Crisis",
-            "analysis": {
-                "title": "Safety First",
-                "summary": "We detected distress.",
-                "advice": "Please reach out to a professional immediately.",
-                "keywords": ["Help", "Support"]
-            }
-        }
+        return {"mood": "Crisis", "analysis": {"title": "Safety First", "summary": "Crisis detected.", "advice": "Seek help.", "keywords": ["Help"]}}
 
-    # 2. Smart Mood Logic
     raw_label = "Neutral"
     if classifier:
         raw_label = classifier.predict([request.text])[0]
     resolved_result = logic_core.resolve_mood(request.text, raw_label, request.username)
     smart_mood = resolved_result["mood"]
 
-    # 3. Llama 3 Analysis
     try:
         completion = client.chat.completions.create(
-            model="llama3-8b-8192", # ⚡ Fast & Smart Model
+            # ✅ UPDATED MODEL NAME
+            model="llama-3.3-70b-versatile", 
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a psychologist. Analyze the diary entry. Return ONLY valid JSON."
+                    "content": "You are a psychologist. Return ONLY valid JSON."
                 },
                 {
                     "role": "user",
                     "content": f"""
-                    Analyze this entry: "{request.text}"
-                    The detected mood is: {smart_mood}.
-                    
-                    Return ONLY a JSON object with this format:
-                    {{
-                        "mood": "{smart_mood}", 
-                        "title": "Short poetic title (3-5 words)",
-                        "summary": "One warm sentence summary",
-                        "advice": "One small positive action",
-                        "keywords": ["Theme1", "Theme2"]
-                    }}
+                    Analyze this: "{request.text}"
+                    Mood: {smart_mood}.
+                    Return JSON: {{ "mood": "{smart_mood}", "title": "...", "summary": "...", "advice": "...", "keywords": ["..."] }}
                     """
                 }
             ],
             temperature=0.5,
-            response_format={"type": "json_object"} # Forces JSON
+            response_format={"type": "json_object"}
         )
         
         analysis = json.loads(completion.choices[0].message.content)
@@ -143,33 +126,22 @@ async def analyze_journal(request: TextRequest):
 
     except Exception as e:
         print(f"Llama Error: {e}")
-        return {
-            "mood": smart_mood,
-            "analysis": {
-                "title": "Daily Entry",
-                "summary": "Saved successfully.",
-                "advice": "Keep taking care of yourself.",
-                "keywords": ["Journal"]
-            }
-        }
+        return {"mood": smart_mood, "analysis": {"title": "Daily Entry", "summary": "Saved.", "advice": "Keep going.", "keywords": ["Journal"]}}
 
 @app.post("/chat")
 async def chat_with_ai(request: TextRequest):
     try:
         user_id = request.username
-        
-        # Safety Check
         is_crisis, crisis_msg = logic_core.check_safety(request.text)
         if is_crisis:
             return {"reply": crisis_msg, "mood": "Crisis", "is_crisis": True}
 
-        # Update History
         chat_manager.add_message(user_id, "user", request.text)
         history = chat_manager.get_history(user_id)
 
-        # Get Reply from Llama 3
         completion = client.chat.completions.create(
-            model="llama3-8b-8192",
+            # ✅ UPDATED MODEL NAME
+            model="llama-3.3-70b-versatile",
             messages=history,
             temperature=0.7,
             max_tokens=150
@@ -177,12 +149,8 @@ async def chat_with_ai(request: TextRequest):
         
         ai_reply = completion.choices[0].message.content
         chat_manager.add_message(user_id, "assistant", ai_reply)
-        
         return {"reply": ai_reply, "is_crisis": False}
 
     except Exception as e:
         print(f"Chat Error: {e}")
-        return {
-            "reply": "I'm having a little trouble thinking right now. Please try again.", 
-            "is_crisis": False
-        }
+        return {"reply": "I'm having trouble thinking right now.", "is_crisis": False}
