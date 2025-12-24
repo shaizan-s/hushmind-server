@@ -27,8 +27,15 @@ class ChatManager:
 
     def get_chat(self, user_id):
         if user_id not in self.sessions:
-            # ✅ FIXED: Uses the correct, working model
-            model = genai.GenerativeModel('gemini-1.5-flash')
+            # 🛡️ BULLETPROOF MODEL SELECTION
+            # Try 1.5 Flash first (Best). If server is old, fall back to Pro.
+            try:
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                print("✨ Using Gemini 1.5 Flash")
+            except Exception:
+                print("⚠️ 1.5 Flash failed, falling back to Gemini Pro")
+                model = genai.GenerativeModel('gemini-pro')
+
             self.sessions[user_id] = model.start_chat(history=[
                 {"role": "user", "parts": ["You are HushMind, a warm, empathetic mental health AI friend. Keep answers short (max 2-3 sentences)."]},
                 {"role": "model", "parts": ["Understood. I am HushMind, here to listen and support."]}
@@ -49,7 +56,7 @@ except Exception as e:
 # 4. Server Setup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("\n🚀 HUSHMIND SERVER IS LIVE (Chat & Journal Fixed) 🚀\n")
+    print("\n🚀 HUSHMIND SERVER IS LIVE (Bulletproof Mode) 🚀\n")
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -68,77 +75,65 @@ class TextRequest(BaseModel):
 
 # --- ENDPOINTS ---
 
-# ⚡ FAST BRAIN: For Mood Graph & Chat Colors (Fast & Efficient)
 @app.post("/predict")
 def predict_mood(request: TextRequest):
     if not classifier:
         return {"error": "Model not loaded"}
-        
-    ml_label = classifier.predict([request.text])[0]
-    result = logic_core.resolve_mood(request.text, ml_label, request.username)
-    return {
-        "mood": result["mood"],
-        "feedback": result["feedback"],
-        "color_code": result["color_code"]
-    }
+    
+    try:
+        ml_label = classifier.predict([request.text])[0]
+        result = logic_core.resolve_mood(request.text, ml_label, request.username)
+        return {
+            "mood": result["mood"],
+            "feedback": result["feedback"],
+            "color_code": result["color_code"]
+        }
+    except Exception as e:
+        print(f"Predict Error: {e}")
+        return {"mood": "Neutral", "feedback": "I am listening.", "color_code": "0xFFFFFFFF"}
 
-# 🧠 DEEP BRAIN: For Diary Analysis (Title, Advice, Summary)
 @app.post("/analyze_journal")
 async def analyze_journal(request: TextRequest):
-    # 1. Safety Check First
+    # Safety Check
     is_crisis, crisis_msg = logic_core.check_safety(request.text)
     if is_crisis:
-        return {
-            "mood": "Crisis",
-            "analysis": {
-                "title": "Safety First",
-                "summary": "We detected distress in your message.",
-                "advice": "Please reach out to a professional or helpline immediately.",
-                "keywords": ["Help", "Support", "Safety"]
-            }
-        }
+        return {"mood": "Crisis", "analysis": {"title": "Safety First", "summary": "Crisis detected.", "advice": "Please seek professional help.", "keywords": ["Help"]}}
 
-    # 2. Get Smart Mood (With Keyword Overrides)
-    # This ensures "promotion" -> "Happy" instantly
+    # Smart Mood
     raw_label = "Neutral"
     if classifier:
         raw_label = classifier.predict([request.text])[0]
-    
-    # ✅ KEY FIX: Run logic_core first to fix "Work" vs "Promotion" errors
     resolved_result = logic_core.resolve_mood(request.text, raw_label, request.username)
     smart_mood = resolved_result["mood"] 
         
-    # 3. Ask Gemini for "Therapist Report"
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        # 🛡️ BULLETPROOF SELECTION FOR JOURNAL TOO
+        try:
+            model = genai.GenerativeModel('gemini-1.5-flash')
+        except:
+            model = genai.GenerativeModel('gemini-pro')
+
         prompt = f"""
-        You are a warm, empathetic psychologist. Analyze this diary entry: "{request.text}"
-        
-        The detected mood is: {smart_mood}.
-        
-        Return ONLY a JSON object (no markdown) with this format:
+        Analyze this diary entry: "{request.text}"
+        Detected mood: {smart_mood}.
+        Return ONLY JSON:
         {{
             "mood": "{smart_mood}", 
-            "title": "A short, poetic title for this entry (3-5 words)",
-            "summary": "A warm, 1-sentence validation of how they feel.",
-            "advice": "One small, actionable, positive step they can take right now.",
-            "keywords": ["Theme1", "Theme2", "Theme3"]
+            "title": "Short poetic title",
+            "summary": "One sentence summary",
+            "advice": "One actionable step",
+            "keywords": ["Tag1", "Tag2"]
         }}
         """
-        
         response = model.generate_content(prompt)
         text_resp = response.text.replace("```json", "").replace("```", "").strip()
         analysis = json.loads(text_resp)
-        
-        return {
-            "mood": analysis.get("mood", smart_mood),
-            "analysis": analysis 
-        }
+        return {"mood": analysis.get("mood", smart_mood), "analysis": analysis}
 
     except Exception as e:
-        print(f"AI Error: {e}")
+        print(f"AI Journal Error: {e}")
         return {
-            "mood": smart_mood, # ✅ Fallback uses the correct logic mood
+            "mood": smart_mood,
             "analysis": {
                 "title": "Daily Entry",
                 "summary": "Saved successfully.",
@@ -147,33 +142,25 @@ async def analyze_journal(request: TextRequest):
             }
         }
 
-# 💬 CHAT ENDPOINT
 @app.post("/chat")
 async def chat_with_ai(request: TextRequest):
     try:
         user_id = request.username
         
-        # 1. 🚨 SAFETY CHECK FIRST
+        # Safety Check
         is_crisis, crisis_msg = logic_core.check_safety(request.text)
         if is_crisis:
-            return {
-                "reply": crisis_msg,
-                "mood": "Crisis",
-                "is_crisis": True
-            }
+            return {"reply": crisis_msg, "mood": "Crisis", "is_crisis": True}
 
-        # 2. Send to Gemini
+        # Send to Gemini
         chat = chat_manager.get_chat(user_id)
         response = chat.send_message(request.text)
         
-        return {
-            "reply": response.text, 
-            "is_crisis": False
-        }
+        return {"reply": response.text, "is_crisis": False}
 
     except Exception as e:
-        print(f"⚠️ Gemini Error: {e}")
+        print(f"⚠️ Gemini Chat Error: {e}")
         return {
-            "reply": "I'm feeling a bit foggy right now. Can we try again in a moment?", 
+            "reply": "I'm having trouble connecting to my brain right now. Please try again in 1 minute.", 
             "is_crisis": False
         }
