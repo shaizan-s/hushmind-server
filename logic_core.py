@@ -30,9 +30,11 @@ def check_safety(text):
 # --- 3. ANALYSIS FUNCTIONS ---
 def resolve_mood(text, ml_prediction, username="Friend"):
     """
-    Combines ML guess with Safety checks and returns formatted feedback.
+    Combines ML guess with Safety checks and keyword overrides.
     """
-    # 1. Check Safety First (Override ML)
+    clean_text = text.lower()
+
+    # 1. Check Safety First (Highest Priority)
     is_crisis, crisis_msg = check_safety(text)
     if is_crisis:
         return {
@@ -41,22 +43,31 @@ def resolve_mood(text, ml_prediction, username="Friend"):
             "color_code": MOOD_COLORS["Crisis"]
         }
 
-    # 2. Manual Logic Overrides (for common errors)
-    clean_text = text.lower().strip()
-    if clean_text in ["sad", "i am sad", "depressed"]:
-        final_mood = "Sad"
-    elif clean_text in ["happy", "good", "great"]:
+    # 2. Positive Keyword Override (Fixes the "Work Promotion" bug)
+    # If the user says "happy", "proud", or "excited", we FORCE the mood to Happy.
+    positive_keywords = ["happy", "excited", "proud", "great", "joy", "awesome", "good", "promotion", "love"]
+    if any(word in clean_text for word in positive_keywords):
         final_mood = "Happy"
+        
+    # 3. Manual Logic Overrides for negatives (if ML misses them)
+    elif "sad" in clean_text or "depressed" in clean_text or "crying" in clean_text:
+        final_mood = "Sad"
+    elif "anxious" in clean_text or "nervous" in clean_text:
+        final_mood = "Stress"
+        
+    # 4. If no keywords found, trust the ML model
     else:
-        final_mood = ml_prediction # Trust the ML model
+        final_mood = ml_prediction 
 
-    # 3. Generate Feedback
+    # 5. Generate Feedback
     feedback_map = {
         "Sad": f"I hear you, {username}. It's okay to let those feelings out.",
         "Lonely": f"I'm here with you, {username}. Loneliness is a sign we need connection.",
         "Happy": f"That's wonderful, {username}! Hold onto this feeling.",
         "Calm": "It sounds like things are steady. That is a good place to be.",
-        "Angry": f"Take a deep breath, {username}. It's safe to be angry here."
+        "Angry": f"Take a deep breath, {username}. It's safe to be angry here.",
+        "Stress": f"You're carrying a lot, {username}. Remember to breathe.",
+        "Normal": f"Day by day, {username}. That's how we do it."
     }
 
     return {
