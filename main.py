@@ -27,7 +27,7 @@ class ChatManager:
 
     def get_chat(self, user_id):
         if user_id not in self.sessions:
-            # ✅ CORRECTED MODEL NAME: gemini-1.5-flash
+            # ✅ FIXED: Uses the correct, working model
             model = genai.GenerativeModel('gemini-1.5-flash')
             self.sessions[user_id] = model.start_chat(history=[
                 {"role": "user", "parts": ["You are HushMind, a warm, empathetic mental health AI friend. Keep answers short (max 2-3 sentences)."]},
@@ -49,7 +49,7 @@ except Exception as e:
 # 4. Server Setup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("\n🚀 HUSHMIND SERVER IS RUNNING (Dual-Brain Mode) 🚀\n")
+    print("\n🚀 HUSHMIND SERVER IS LIVE (Chat & Journal Fixed) 🚀\n")
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -68,7 +68,7 @@ class TextRequest(BaseModel):
 
 # --- ENDPOINTS ---
 
-# ⚡ FAST BRAIN: For Mood Graph & Chat Colors
+# ⚡ FAST BRAIN: For Mood Graph & Chat Colors (Fast & Efficient)
 @app.post("/predict")
 def predict_mood(request: TextRequest):
     if not classifier:
@@ -82,7 +82,6 @@ def predict_mood(request: TextRequest):
         "color_code": result["color_code"]
     }
 
-# 🧠 DEEP BRAIN: For Diary Analysis (Title, Advice, Summary)
 # 🧠 DEEP BRAIN: For Diary Analysis (Title, Advice, Summary)
 @app.post("/analyze_journal")
 async def analyze_journal(request: TextRequest):
@@ -100,12 +99,12 @@ async def analyze_journal(request: TextRequest):
         }
 
     # 2. Get Smart Mood (With Keyword Overrides)
-    # This ensures "promotion" -> "Happy" even if ML fails
+    # This ensures "promotion" -> "Happy" instantly
     raw_label = "Neutral"
     if classifier:
         raw_label = classifier.predict([request.text])[0]
     
-    # ✅ KEY FIX: Use logic_core to fix the mood BEFORE asking Gemini
+    # ✅ KEY FIX: Run logic_core first to fix "Work" vs "Promotion" errors
     resolved_result = logic_core.resolve_mood(request.text, raw_label, request.username)
     smart_mood = resolved_result["mood"] 
         
@@ -114,6 +113,8 @@ async def analyze_journal(request: TextRequest):
         model = genai.GenerativeModel('gemini-1.5-flash')
         prompt = f"""
         You are a warm, empathetic psychologist. Analyze this diary entry: "{request.text}"
+        
+        The detected mood is: {smart_mood}.
         
         Return ONLY a JSON object (no markdown) with this format:
         {{
@@ -124,21 +125,20 @@ async def analyze_journal(request: TextRequest):
             "keywords": ["Theme1", "Theme2", "Theme3"]
         }}
         """
-        # Note: We hinted the mood to Gemini using {smart_mood} to guide it correctly!
         
         response = model.generate_content(prompt)
         text_resp = response.text.replace("```json", "").replace("```", "").strip()
         analysis = json.loads(text_resp)
         
         return {
-            "mood": analysis.get("mood", smart_mood), # Use AI mood, or fallback to smart_mood
+            "mood": analysis.get("mood", smart_mood),
             "analysis": analysis 
         }
 
     except Exception as e:
         print(f"AI Error: {e}")
         return {
-            "mood": smart_mood, # ✅ Fallback is now CORRECT (Happy, not Stress)
+            "mood": smart_mood, # ✅ Fallback uses the correct logic mood
             "analysis": {
                 "title": "Daily Entry",
                 "summary": "Saved successfully.",
@@ -146,6 +146,8 @@ async def analyze_journal(request: TextRequest):
                 "keywords": ["Journal"]
             }
         }
+
+# 💬 CHAT ENDPOINT
 @app.post("/chat")
 async def chat_with_ai(request: TextRequest):
     try:
