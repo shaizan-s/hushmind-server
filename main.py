@@ -26,7 +26,7 @@ class ChatManager:
 
     def get_chat(self, user_id):
         if user_id not in self.sessions:
-            model = genai.GenerativeModel('gemini-pro')
+            model = genai.GenerativeModel('gemini-2.5-flash')
             self.sessions[user_id] = model.start_chat(history=[
                 {"role": "user", "parts": ["You are HushMind, a warm, empathetic mental health AI friend. Keep answers short (max 2-3 sentences)."]},
                 {"role": "model", "parts": ["Understood. I am HushMind, here to listen and support."]}
