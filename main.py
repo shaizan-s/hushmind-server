@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import pickle
 import os
-import requests # For calling Hugging Face API
 from groq import Groq 
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
@@ -16,21 +15,32 @@ import logic_core
 load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-HF_TOKEN = os.getenv("HF_TOKEN") 
 
 if not GROQ_API_KEY:
     print("❌ ERROR: GROQ_API_KEY not found.")
-if not HF_TOKEN:
-    print("⚠️ WARNING: HF_TOKEN not found. AI Safety check will be skipped.")
 
-# Initialize Groq Client
+# Initialize Groq Client (For Chatting)
 client = Groq(api_key=GROQ_API_KEY)
 
-# Hugging Face API Setup
-HF_API_URL = "https://api-inference.huggingface.co/models/sisyphus/bert-base-uncased-suicidality"
-hf_headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+# 2. LOAD THE TWO BRAINS 🧠🧠
+try:
+    with open("suicide_model.pkl", "rb") as f:
+        suicide_model = pickle.load(f)
+    print("✅ Guard Dog (Suicide Model) loaded successfully")
+except Exception as e:
+    print(f"❌ Error loading suicide_model.pkl: {e}")
+    suicide_model = None
 
-# 2. Chat Memory Management
+try:
+    with open("mood_model.pkl", "rb") as f:
+        mood_model = pickle.load(f)
+    print("✅ Therapist (Mood Model) loaded successfully")
+except Exception as e:
+    print(f"❌ Error loading mood_model.pkl: {e}")
+    mood_model = None
+
+
+# 3. Chat Memory Management
 class ChatManager:
     def __init__(self):
         self.histories = {}
@@ -50,41 +60,11 @@ class ChatManager:
 
 chat_manager = ChatManager()
 
-# 3. Load ML Model
-try:
-    with open("mood_model.pkl", "rb") as f:
-        classifier = pickle.load(f)
-    print("✅ Model loaded successfully")
-except Exception as e:
-    print(f"❌ Error loading model: {e}")
-    classifier = None
-
-# ✨ Helper function to check Crisis via Cloud AI
-def check_crisis_with_ai(text):
-    if not HF_TOKEN: return False 
-    
-    try:
-        response = requests.post(HF_API_URL, headers=hf_headers, json={"inputs": text})
-        api_output = response.json()
-        
-        if isinstance(api_output, list) and len(api_output) > 0:
-            top_result = api_output[0][0] 
-            label = top_result['label']
-            score = top_result['score']
-            
-            # 🚨 CHANGED: Threshold lowered to 0.4 (40%) to catch subtle phrases
-            if label == "Suicide" and score > 0.4: 
-                print(f"🚨 AI DETECTED CRISIS: {label} ({score})")
-                return True
-    except Exception as e:
-        print(f"⚠️ AI Safety Check Failed: {e}")
-    
-    return False
 
 # 4. Server Setup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("\n🚀 HUSHMIND SERVER IS LIVE (Hybrid AI) 🚀\n")
+    print("\n🚀 HUSHMIND SERVER IS LIVE (Dual-Brain Architecture) 🚀\n")
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -105,44 +85,30 @@ class TextRequest(BaseModel):
 
 @app.post("/predict")
 def predict_mood(request: TextRequest):
-    # 1. Check AI Safety First
-    if check_crisis_with_ai(request.text):
-         return {
-            "mood": "Crisis",
-            "feedback": "I'm detecting that you are in severe distress. Please reach out to the safety contacts.",
-            "color_code": "#FF5252" # Red
-         }
-
-    # 2. Normal Logic
-    if not classifier:
-        return {"error": "Model not loaded"}
-        
-    ml_label = classifier.predict([request.text])[0]
-    result = logic_core.resolve_mood(request.text, ml_label, request.username)
-    return {
-        "mood": result["mood"],
-        "feedback": result["feedback"],
-        "color_code": result["color_code"]
-    }
+    # ✨ MAGIC: Pass BOTH models to the logic core
+    # The logic_core will ask the Guard Dog first, then the Therapist.
+    result = logic_core.resolve_mood(request.text, suicide_model, mood_model, request.username)
+    return result
 
 @app.post("/analyze_journal")
 async def analyze_journal(request: TextRequest):
-    # 1. Basic Keyword Check
-    is_crisis_keyword, _ = logic_core.check_safety(request.text)
-    
-    # 2. Advanced AI Check
-    is_crisis_ai = check_crisis_with_ai(request.text)
-
-    if is_crisis_keyword or is_crisis_ai:
-        return {"mood": "Crisis", "analysis": {"title": "Safety First", "summary": "Crisis detected.", "advice": "Please seek professional help immediately.", "keywords": ["Help", "Safety"]}}
-
-    # 3. Normal Logic
-    raw_label = "Neutral"
-    if classifier:
-        raw_label = classifier.predict([request.text])[0]
-    resolved_result = logic_core.resolve_mood(request.text, raw_label, request.username)
+    # 1. Get Smart Mood using Dual-Brain Logic
+    resolved_result = logic_core.resolve_mood(request.text, suicide_model, mood_model, request.username)
     smart_mood = resolved_result["mood"]
+    
+    # 2. If Crisis, Stop Here
+    if smart_mood == "Crisis":
+        return {
+            "mood": "Crisis", 
+            "analysis": {
+                "title": "Safety First", 
+                "summary": "We detected distress in your entry.", 
+                "advice": "Please reach out to your safety contact immediately.", 
+                "keywords": ["Help", "Safety"]
+            }
+        }
 
+    # 3. If Safe, Get Deep Analysis from Groq (Llama 3)
     try:
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile", 
@@ -173,20 +139,17 @@ async def chat_with_ai(request: TextRequest):
     try:
         user_id = request.username
         
-        # 1. Basic Keyword Check
-        is_crisis_keyword, crisis_msg = logic_core.check_safety(request.text)
-        if is_crisis_keyword:
-             return {"reply": crisis_msg, "mood": "Crisis", "is_crisis": True}
+        # 1. Check Safety First (Dual-Brain)
+        resolved = logic_core.resolve_mood(request.text, suicide_model, mood_model, user_id)
+        
+        if resolved["mood"] == "Crisis":
+             return {
+                 "reply": resolved["feedback"], 
+                 "mood": "Crisis", 
+                 "is_crisis": True
+             }
 
-        # 2. Advanced AI Check
-        if check_crisis_with_ai(request.text):
-            return {
-                "reply": "It sounds like you are going through a critical time. I want to make sure you are safe. Please connect with your emergency contact.", 
-                "mood": "Crisis", 
-                "is_crisis": True
-            }
-
-        # 3. Normal Chat Logic
+        # 2. Normal Chat Logic (If Safe)
         chat_manager.add_message(user_id, "user", request.text)
         history = chat_manager.get_history(user_id)
 
