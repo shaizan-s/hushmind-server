@@ -98,16 +98,16 @@ async def analyze_journal(data: dict):
     journal_text = data.get("text", "")
     username = data.get("username", "Friend")
 
-    # The prompt now demands a structured JSON response
+    # This prompt tells Llama 3 to create the warm, comforting reflection
     prompt = f"""
     You are a compassionate mental health companion for {username}.
-    Analyze the following journal entry: "{journal_text}"
+    Analyze this journal entry: "{journal_text}"
     
-    1. Classify the mood into ONE of these: Calm, Anxious, Stressed, Depressed, Lonely, or Crisis.
-    2. Provide a short, warm, and empathetic insight (max 2 sentences). 
-    3. If the user expresses self-harm or immediate danger, the mood MUST be 'Crisis'.
+    1. Classify the mood: Calm, Anxious, Stressed, Depressed, Lonely, or Crisis.
+    2. Provide a short, warm, and empathetic insight (max 2 sentences).
+    3. If there is self-harm risk, the mood MUST be 'Crisis'.
 
-    Return ONLY a JSON object like this:
+    Return ONLY a JSON object:
     {{
       "mood": "MoodLabel",
       "insight": "Your empathetic reflection here..."
@@ -118,12 +118,17 @@ async def analyze_journal(data: dict):
         response = groq_client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            response_format={"type": "json_object"} # Force JSON output
+            # This forces the AI to give us valid JSON that Flutter can read
+            response_format={"type": "json_object"} 
         )
         
-        # Parse the JSON string from the AI
+        # We parse the AI's string response into a Python dictionary
         result = json.loads(response.choices[0].message.content)
         return result
     except Exception as e:
-        print(f"Error: {e}")
-        return {"mood": "Neutral", "insight": "Thank you for sharing your thoughts with me today."}
+        print(f"Error in analysis: {e}")
+        # Fallback so the app doesn't crash if the AI fails
+        return {
+            "mood": "Neutral", 
+            "insight": "Thank you for sharing your thoughts with me today."
+        }
