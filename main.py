@@ -98,13 +98,12 @@ async def analyze_journal(data: dict):
     journal_text = data.get("text", "")
     username = data.get("username", "Friend")
 
-    # This prompt tells Llama 3 to create the warm, comforting reflection
     prompt = f"""
     You are a compassionate mental health companion for {username}.
     Analyze this journal entry: "{journal_text}"
     
-    1. Classify the mood: Calm, Anxious, Stressed, Depressed, Lonely, or Crisis.
-    2. Provide a short, warm, and empathetic insight (max 2 sentences).
+    1. Classify mood: Calm, Anxious, Stressed, Depressed, Lonely, or Crisis.
+    2. Provide a short, warm, empathetic insight (max 2 sentences).
     3. If there is self-harm risk, the mood MUST be 'Crisis'.
 
     Return ONLY a JSON object:
@@ -118,17 +117,8 @@ async def analyze_journal(data: dict):
         response = groq_client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "user", "content": prompt}],
-            # This forces the AI to give us valid JSON that Flutter can read
             response_format={"type": "json_object"} 
         )
-        
-        # We parse the AI's string response into a Python dictionary
-        result = json.loads(response.choices[0].message.content)
-        return result
+        return json.loads(response.choices[0].message.content)
     except Exception as e:
-        print(f"Error in analysis: {e}")
-        # Fallback so the app doesn't crash if the AI fails
-        return {
-            "mood": "Neutral", 
-            "insight": "Thank you for sharing your thoughts with me today."
-        }
+        return {"mood": "Neutral", "insight": "I'm here for you. Thank you for sharing."}
